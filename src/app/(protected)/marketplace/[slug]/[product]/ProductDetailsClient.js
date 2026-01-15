@@ -559,30 +559,71 @@ const handleTouchEnd = () => {
     }
   };
 
-  const items = [
-    { label: "Home", href: "/" },
-    { label: "Marketplace", href: "/marketplace" },
-    {
-      label: product.category?.name || "Category",
-      href: `/marketplace/${product.category?.slug
-        ?.split("/")
-        .pop()}?categoryId=${product.category?.id}`,
-    },
-    { label: product.title || "Product" },
-  ];
+  // const items = [
+  //   { label: "Home", href: "/" },
+  //   { label: "Marketplace", href: "/marketplace" },
+  //   {
+  //     label: product.category?.name || "Category",
+  //     href: `/marketplace/${product.category?.slug
+  //       ?.split("/")
+  //       .pop()}?categoryId=${product.category?.id}`,
+  //   },
+  //   { label: product.title || "Product" },
+  // ];
+  const truncate = (text = "", length = 12) => {
+  if (text.length <= length) return text;
+  return text.slice(0, length) + "…";
+};
+
+  // const items = [
+  //   { label: "Home", href: "/" },
+  //   { label: "Marketplace", href: "/marketplace" },
+  //   {
+  //     label: product.category?.name || "Category",
+  //     href: `/marketplace/${product.category?.slug
+  //       ?.split("/")
+  //       .pop()}?categoryId=${product.category?.id}`,
+  //   },
+  //   { label: product.title || "Product" },
+  // ];
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+
+const items = [
+  { label: "Home", href: "/" },
+  { label: "Marketplace", href: "/marketplace" },
+  {
+    label: isMobile
+      ? truncate(product.category?.name || "Category", 5)
+      : product.category?.name || "Category",
+    href: `/marketplace/${product.category?.slug
+      ?.split("/")
+      .pop()}?categoryId=${product.category?.id}`,
+  },
+  {
+    label: isMobile
+      ? truncate(product.title || "Product", 10)
+      : product.title || "Product",
+  },
+];
+
   const { t, i18n } = useTranslation();
 
   const isRTL = i18n.language === "ar";
 
   return (
     <div className="min-h-screen bg-white">
-      <Breadcrumbs
+      {/* <Breadcrumbs
         items={items}
         styles={{
           nav: "flex justify-start text-sm font-medium bg-white border-b border-gray-200 px-10 py-3",
         }}
-      />
-
+      /> */}
+<Breadcrumbs
+  items={items}
+  styles={{
+    nav: "flex justify-start text-sm font-medium bg-white border-b border-gray-200 px-4 sm:px-10 py-3",
+  }}
+/>
       <section className="mx-auto px-4 py-2">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div className="bg-white rounded-lg p-4 w-full max-w-[700px] mx-auto">

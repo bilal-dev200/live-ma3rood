@@ -28,6 +28,7 @@ import { RxCross2 } from "react-icons/rx";
 import ImageCarousel from "./ImageCarousel";
 import PropertyMapSection from "../PropertyMapSection";
 import { formatSaudiTime } from "@/lib/common/format";
+import Link from "next/link";
 
 function BidHistoryModal({ bids, open, onClose }) {
   const { t } = useTranslation();
@@ -545,6 +546,31 @@ export default function MotorDetailsClient({ product: initialProduct, feedbackPe
       // Optionally handle error
     }
   };
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const threshold = 50; // min distance for swipe
+    if (distance > threshold) {
+      // swiped left → next image
+      setCarouselIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    } else if (distance < -threshold) {
+      // swiped right → previous image
+      setCarouselIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    }
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
 
   const items = [
     { label: "Home", href: "/" },
@@ -600,7 +626,7 @@ export default function MotorDetailsClient({ product: initialProduct, feedbackPe
                 </button>
               )}
 
-              <img
+              {/* <img
                 src={
                   images[carouselIndex]
                     ? `${images[carouselIndex]}`
@@ -613,7 +639,26 @@ export default function MotorDetailsClient({ product: initialProduct, feedbackPe
                   setModalImageIndex(carouselIndex);
                   setImageModalOpen(true);
                 }}
+              /> */}
+              <img
+                // src={images[carouselIndex] ? `${Image_URL}${images[carouselIndex]}` : Image_NotFound}
+                src={
+                  images[carouselIndex]
+                    ? `${images[carouselIndex]}`
+                    : Image_NotFound
+                }
+                alt={`Product Image ${carouselIndex + 1}`}
+                className="object-contain rounded-lg w-full h-full cursor-pointer"
+                style={{ maxHeight: 400 }}
+                onClick={() => {
+                  setModalImageIndex(carouselIndex);
+                  setImageModalOpen(true);
+                }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               />
+
 
               {/* Right Arrow */}
               {images.length > 1 && (
@@ -886,27 +931,27 @@ export default function MotorDetailsClient({ product: initialProduct, feedbackPe
                   onClose={() => setBuyNowOpen(false)}
                   onBuyNow={refreshProduct}
                 />
-                 {Number(product?.start_price.replace(/,/g, "")) > 0 && <p className="text-xs text-gray-500">
-                <span className="font-medium text-gray-700">
-                  {product.bids &&
-                    product.bids[0]?.amount > product?.reserve_price
-                    ? t("Reserve Met")
-                    : t("Reserve Not Met")}
-                </span>
-              </p>}
                 {Number(product?.start_price.replace(/,/g, "")) > 0 && <p className="text-xs text-gray-500">
-                <span className="text-green-600 font-medium">
-                  {" "}
-                  {`${product?.bids_count || 0} ${t("bids so far")}`}
-                </span>{" "}
-                –{" "}
-                <span
-                  className="text-green-600 underline cursor-pointer hover:text-green-800"
-                  onClick={() => setBidHistoryOpen(true)}
-                >
-                  {t("view history")}
-                </span>
-              </p>}
+                  <span className="font-medium text-gray-700">
+                    {product.bids &&
+                      product.bids[0]?.amount > product?.reserve_price
+                      ? t("Reserve Met")
+                      : t("Reserve Not Met")}
+                  </span>
+                </p>}
+                {Number(product?.start_price.replace(/,/g, "")) > 0 && <p className="text-xs text-gray-500">
+                  <span className="text-green-600 font-medium">
+                    {" "}
+                    {`${product?.bids_count || 0} ${t("bids so far")}`}
+                  </span>{" "}
+                  –{" "}
+                  <span
+                    className="text-green-600 underline cursor-pointer hover:text-green-800"
+                    onClick={() => setBidHistoryOpen(true)}
+                  >
+                    {t("view history")}
+                  </span>
+                </p>}
                 {product?.allow_offers && product.bids.length == 0 && (
                   <div className="flex items-center justify-between mt-4">
                     <span className="text-sm text-gray-600">
@@ -977,6 +1022,18 @@ export default function MotorDetailsClient({ product: initialProduct, feedbackPe
                       </>
                     )}
                   </div>
+                  {/* <Link
+                    href={`/motors/creator?creator_id=${product.creator?.id || ""}&status=1`}
+                    className="text-xs text-green-600 font-medium hover:underline mt-1 inline-block"
+                  >
+                    {t("View other listings")}
+                  </Link> */}
+                   {/* <Link
+                  href={`/motors/creator?creator_id=${product.creator?.id || ""}&status=1`}
+                  className="text-xs text-green-600 font-medium hover:underline mt-1 inline-block"
+                >
+                  {t("View other listings")}
+                </Link> */}
                 </div>
 
                 {/* Add to Favorite */}

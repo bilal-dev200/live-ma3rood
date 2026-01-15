@@ -520,31 +520,31 @@ export default function ProductDetailsClient({ product: initialProduct, feedback
 
   console.log("product", product);
 
-const [touchStart, setTouchStart] = useState(null);
-const [touchEnd, setTouchEnd] = useState(null);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
-const handleTouchStart = (e) => {
-  setTouchStart(e.targetTouches[0].clientX);
-};
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
 
-const handleTouchMove = (e) => {
-  setTouchEnd(e.targetTouches[0].clientX);
-};
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
 
-const handleTouchEnd = () => {
-  if (!touchStart || !touchEnd) return;
-  const distance = touchStart - touchEnd;
-  const threshold = 50; // min distance for swipe
-  if (distance > threshold) {
-    // swiped left → next image
-    setCarouselIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  } else if (distance < -threshold) {
-    // swiped right → previous image
-    setCarouselIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  }
-  setTouchStart(null);
-  setTouchEnd(null);
-};
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const threshold = 50; // min distance for swipe
+    if (distance > threshold) {
+      // swiped left → next image
+      setCarouselIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    } else if (distance < -threshold) {
+      // swiped right → previous image
+      setCarouselIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    }
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
 
 
 
@@ -558,22 +558,10 @@ const handleTouchEnd = () => {
       // Optionally handle error
     }
   };
-
-  // const items = [
-  //   { label: "Home", href: "/" },
-  //   { label: "Marketplace", href: "/marketplace" },
-  //   {
-  //     label: product.category?.name || "Category",
-  //     href: `/marketplace/${product.category?.slug
-  //       ?.split("/")
-  //       .pop()}?categoryId=${product.category?.id}`,
-  //   },
-  //   { label: product.title || "Product" },
-  // ];
   const truncate = (text = "", length = 12) => {
-  if (text.length <= length) return text;
-  return text.slice(0, length) + "…";
-};
+    if (text.length <= length) return text;
+    return text.slice(0, length) + "…";
+  };
 
   // const items = [
   //   { label: "Home", href: "/" },
@@ -588,23 +576,23 @@ const handleTouchEnd = () => {
   // ];
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
-const items = [
-  { label: "Home", href: "/" },
-  { label: "Marketplace", href: "/marketplace" },
-  {
-    label: isMobile
-      ? truncate(product.category?.name || "Category", 5)
-      : product.category?.name || "Category",
-    href: `/marketplace/${product.category?.slug
-      ?.split("/")
-      .pop()}?categoryId=${product.category?.id}`,
-  },
-  {
-    label: isMobile
-      ? truncate(product.title || "Product", 10)
-      : product.title || "Product",
-  },
-];
+  const items = [
+    { label: "Home", href: "/" },
+    { label: "Marketplace", href: "/marketplace" },
+    {
+      label: isMobile
+        ? truncate(product.category?.name || "Category", 5)
+        : product.category?.name || "Category",
+      href: `/marketplace/${product.category?.slug
+        ?.split("/")
+        .pop()}?categoryId=${product.category?.id}`,
+    },
+    {
+      label: isMobile
+        ? truncate(product.title || "Product", 10)
+        : product.title || "Product",
+    },
+  ];
 
   const { t, i18n } = useTranslation();
 
@@ -618,12 +606,23 @@ const items = [
           nav: "flex justify-start text-sm font-medium bg-white border-b border-gray-200 px-10 py-3",
         }}
       /> */}
-<Breadcrumbs
+      {/* <Breadcrumbs
   items={items}
   styles={{
     nav: "flex justify-start text-sm font-medium bg-white border-b border-gray-200 px-4 sm:px-10 py-3",
+    item: "max-w-[90px] sm:max-w-none  truncate whitespace-nowrap overflow-hidden",
   }}
-/>
+/> */}
+      <Breadcrumbs
+        items={items}
+        styles={{
+          nav: "flex justify-start text-sm font-medium bg-white border-b border-gray-200 px-4 sm:px-10 py-3",
+        }}
+      />
+
+
+
+
       <section className="mx-auto px-4 py-2">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div className="bg-white rounded-lg p-4 w-full max-w-[700px] mx-auto">
@@ -671,18 +670,18 @@ const items = [
                 }}
               /> */}
               <img
-  src={images[carouselIndex] ? `${Image_URL}${images[carouselIndex]}` : Image_NotFound}
-  alt={`Product Image ${carouselIndex + 1}`}
-  className="object-contain rounded-lg w-full h-full cursor-pointer"
-  style={{ maxHeight: 400 }}
-  onClick={() => {
-    setModalImageIndex(carouselIndex);
-    setImageModalOpen(true);
-  }}
-  onTouchStart={handleTouchStart}
-  onTouchMove={handleTouchMove}
-  onTouchEnd={handleTouchEnd}
-/>
+                src={images[carouselIndex] ? `${Image_URL}${images[carouselIndex]}` : Image_NotFound}
+                alt={`Product Image ${carouselIndex + 1}`}
+                className="object-contain rounded-lg w-full h-full cursor-pointer"
+                style={{ maxHeight: 400 }}
+                onClick={() => {
+                  setModalImageIndex(carouselIndex);
+                  setImageModalOpen(true);
+                }}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              />
 
 
               {/* Right Arrow */}
@@ -1030,8 +1029,8 @@ const items = [
                     <>
                       {t("Location")}:{" "}
                       {`${product?.creator?.address_1 ? `${product?.creator?.address_1}, ` : ""}${product?.creator?.areas?.name ? `${product?.creator?.areas?.name}, ` : ""
-                          }${product?.creator?.cities?.name || product?.creator?.governorates?.name || ""
-                          }, ${product?.creator?.regions?.name}`}
+                        }${product?.creator?.cities?.name || product?.creator?.governorates?.name || ""
+                        }, ${product?.creator?.regions?.name}`}
                     </>
                   ) : (
                     <>
@@ -1045,7 +1044,7 @@ const items = [
                   className="text-xs text-green-600 font-medium hover:underline mt-1 inline-block"
                 >
                   {t("View other listings")}
-                  </Link>
+                </Link>
               </div>
 
               {/* Add to Favorite */}
@@ -1139,7 +1138,7 @@ const items = [
           className="text-gray-700 text-md space-y-1"
           dangerouslySetInnerHTML={{ __html: product.description }}
         /> */}
-      {/* <div
+        {/* <div
   className="text-gray-700 text-md space-y-1 
              max-h-64 md:max-h-80 
              overflow-y-auto 
@@ -1147,7 +1146,7 @@ const items = [
              px-4 py-2 border border-gray-200 rounded-lg"
   dangerouslySetInnerHTML={{ __html: product.description }}
 /> */}
-{/* <div
+        {/* <div
   className="text-gray-700 text-md space-y-1 
              max-h-30 md:max-h-80 
              overflow-y-auto 
@@ -1156,15 +1155,15 @@ const items = [
              break-words"
   dangerouslySetInnerHTML={{ __html: product.description }}
 /> */}
-<div
-  className="text-gray-700 text-md space-y-1 
+        <div
+          className="text-gray-700 text-md space-y-1 
              max-h-30 md:max-h-80 
              overflow-y-auto 
              w-full md:w-3/4 lg:w-[590px] 
              px-4 py-2 border border-gray-200 md:border-0 rounded-lg 
              break-words"
-  dangerouslySetInnerHTML={{ __html: product.description }}
-/>
+          dangerouslySetInnerHTML={{ __html: product.description }}
+        />
 
 
 
@@ -1577,62 +1576,62 @@ const items = [
         </div>
       )} */}
       {isImageModalOpen && (
-  <div
-    className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center"
-    onClick={() => setImageModalOpen(false)} // click outside closes modal
-  >
-    <div
-      className="relative"
-      onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside image
-    >
-      {/* Close Button */}
-      <button
-        className="absolute top-4 right-4 text-white text-3xl font-bold z-10"
-        onClick={() => setImageModalOpen(false)}
-        aria-label="Close"
-      >
-        &times;
-      </button>
-
-      {/* Previous Arrow */}
-      {images.length > 1 && (
-        <button
-          className="absolute left-2 top-1/2 -translate-y-1/2 text-white text-3xl z-10"
-          onClick={() =>
-            setModalImageIndex((prev) =>
-              prev === 0 ? images.length - 1 : prev - 1
-            )
-          }
-          aria-label="Previous"
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center"
+          onClick={() => setImageModalOpen(false)} // click outside closes modal
         >
-          &#8592;
-        </button>
-      )}
+          <div
+            className="relative"
+            onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside image
+          >
+            {/* Close Button */}
+            <button
+              className="absolute top-4 right-4 text-white text-3xl font-bold z-10"
+              onClick={() => setImageModalOpen(false)}
+              aria-label="Close"
+            >
+              &times;
+            </button>
 
-      {/* Image */}
-      <img
-        src={images[modalImageIndex] ? `${Image_URL}${images[modalImageIndex]}` : Image_NotFound}
-        alt={`Full Image ${modalImageIndex + 1}`}
-        className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl"
-      />
+            {/* Previous Arrow */}
+            {images.length > 1 && (
+              <button
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-white text-3xl z-10"
+                onClick={() =>
+                  setModalImageIndex((prev) =>
+                    prev === 0 ? images.length - 1 : prev - 1
+                  )
+                }
+                aria-label="Previous"
+              >
+                &#8592;
+              </button>
+            )}
 
-      {/* Next Arrow */}
-      {images.length > 1 && (
-        <button
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-3xl z-10"
-          onClick={() =>
-            setModalImageIndex((prev) =>
-              prev === images.length - 1 ? 0 : prev + 1
-            )
-          }
-          aria-label="Next"
-        >
-          &#8594;
-        </button>
+            {/* Image */}
+            <img
+              src={images[modalImageIndex] ? `${Image_URL}${images[modalImageIndex]}` : Image_NotFound}
+              alt={`Full Image ${modalImageIndex + 1}`}
+              className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl"
+            />
+
+            {/* Next Arrow */}
+            {images.length > 1 && (
+              <button
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-white text-3xl z-10"
+                onClick={() =>
+                  setModalImageIndex((prev) =>
+                    prev === images.length - 1 ? 0 : prev + 1
+                  )
+                }
+                aria-label="Next"
+              >
+                &#8594;
+              </button>
+            )}
+          </div>
+        </div>
       )}
-    </div>
-  </div>
-)}
 
     </div>
   );
